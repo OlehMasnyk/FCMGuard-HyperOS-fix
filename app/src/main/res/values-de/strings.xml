@@ -76,4 +76,20 @@
     <string name="palette_sunset_amber">Bernstein</string>
     <string name="palette_graphite">Graphit</string>
     <string name="palette_aurora">Polarlicht</string>
+
+    <string name="status_value_granted_adb">Erteilt (ADB)</string>
+    <string name="alert_channel_name">Schutzprobleme</string>
+    <string name="alert_channel_description">Warnt, wenn HyperOS FCM Guard etwas Benötigtes entzieht</string>
+    <string name="permission_lost_title">„Systemeinstellungen ändern“ wurde ausgeschaltet</string>
+    <string name="permission_lost_text">HyperOS hat die Berechtigung von FCM Guard ausgeschaltet, daher können die Google Play-Dienste wieder von der Whitelist fallen. Tippen, um sie wieder einzuschalten. Um das dauerhaft zu verhindern, WRITE_SECURE_SETTINGS einmal per ADB erteilen (siehe README).</string>
+    <string name="night_protection">Nachtschutz (HyperOS 4)</string>
+    <string name="night_protection_summary">Setzt die Google Play-Dienste zusätzlich auf die Einfrier-Ausnahmeliste für Spiele-Vorabdownloads von HyperOS. Nachts (23:00–08:00) ignoriert HyperOS 4 die Whitelist ohne Einschränkungen, beachtet aber diese Liste. Kann etwas mehr Akku verbrauchen.</string>
+    <string name="night_protection_state_on">Die Google Play-Dienste stehen auf der Ausnahmeliste</string>
+    <string name="night_protection_state_missing">Die Google Play-Dienste stehen noch nicht auf der Ausnahmeliste</string>
+    <string name="event_log">Ereignisprotokoll</string>
+    <string name="event_log_empty">Noch keine Ereignisse aufgezeichnet.</string>
+    <string name="event_log_copied">Ereignisprotokoll kopiert</string>
+    <string name="copy">Kopieren</string>
+    <string name="clear">Leeren</string>
+    <string name="close">Schließen</string>
 </resources>

@@ -76,4 +76,20 @@
     <string name="palette_sunset_amber">琥珀橙</string>
     <string name="palette_graphite">石墨</string>
     <string name="palette_aurora">极光</string>
+
+    <string name="status_value_granted_adb">已授权（ADB）</string>
+    <string name="alert_channel_name">保护异常</string>
+    <string name="alert_channel_description">HyperOS 收回 FCM Guard 所需权限时提醒</string>
+    <string name="permission_lost_title">“修改系统设置”权限已被关闭</string>
+    <string name="permission_lost_text">HyperOS 关闭了 FCM Guard 的权限，Google Play 服务可能再次被移出白名单。点按以重新开启。若要彻底避免，请通过 ADB 授予一次 WRITE_SECURE_SETTINGS（见 README）。</string>
+    <string name="night_protection">夜间保护（HyperOS 4）</string>
+    <string name="night_protection_summary">同时把 Google Play 服务加入 HyperOS 游戏预下载免冻结名单。HyperOS 4 在夜间（23:00–08:00）会忽略无限制白名单，但仍遵守此名单。可能略增耗电。</string>
+    <string name="night_protection_state_on">Google Play 服务已在免冻结名单中</string>
+    <string name="night_protection_state_missing">Google Play 服务尚未加入免冻结名单</string>
+    <string name="event_log">事件日志</string>
+    <string name="event_log_empty">暂无事件记录。</string>
+    <string name="event_log_copied">已复制事件日志</string>
+    <string name="copy">复制</string>
+    <string name="clear">清空</string>
+    <string name="close">关闭</string>
 </resources>

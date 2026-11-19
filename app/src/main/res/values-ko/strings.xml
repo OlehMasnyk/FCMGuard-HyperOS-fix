@@ -71,4 +71,20 @@
     <string name="palette_sunset_amber">앰버</string>
     <string name="palette_graphite">그래파이트</string>
     <string name="palette_aurora">오로라</string>
+
+    <string name="status_value_granted_adb">허용됨 (ADB)</string>
+    <string name="alert_channel_name">보호 문제</string>
+    <string name="alert_channel_description">FCM Guard에 필요한 권한을 HyperOS가 회수하면 알림</string>
+    <string name="permission_lost_title">\'시스템 설정 수정\' 권한이 꺼졌습니다</string>
+    <string name="permission_lost_text">HyperOS가 FCM Guard의 권한을 껐기 때문에 Google Play 서비스가 다시 화이트리스트에서 빠질 수 있습니다. 탭하여 다시 켜세요. 완전히 막으려면 ADB로 WRITE_SECURE_SETTINGS를 한 번 부여하세요(README 참고).</string>
+    <string name="night_protection">야간 보호 (HyperOS 4)</string>
+    <string name="night_protection_summary">Google Play 서비스를 HyperOS 게임 사전 다운로드 동결 예외 목록에도 추가합니다. HyperOS 4는 야간(23:00–08:00)에 무제한 화이트리스트를 무시하지만 이 목록은 따릅니다. 배터리를 약간 더 사용할 수 있습니다.</string>
+    <string name="night_protection_state_on">Google Play 서비스가 예외 목록에 있습니다</string>
+    <string name="night_protection_state_missing">Google Play 서비스가 아직 예외 목록에 없습니다</string>
+    <string name="event_log">이벤트 로그</string>
+    <string name="event_log_empty">기록된 이벤트가 없습니다.</string>
+    <string name="event_log_copied">이벤트 로그를 복사했습니다</string>
+    <string name="copy">복사</string>
+    <string name="clear">지우기</string>
+    <string name="close">닫기</string>
 </resources>

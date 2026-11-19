@@ -20,6 +20,10 @@
         <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/pal_divider" android:layout_marginTop="12dp" android:layout_marginBottom="4dp" />
         <Switch android:id="@+id/notificationSwitch" android:layout_width="match_parent" android:layout_height="48dp" android:text="@string/persistent_notification" android:textColor="?attr/pal_text_primary" android:textSize="15sp" />
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/persistent_notification_summary" android:textColor="?attr/pal_text_secondary" android:textSize="12sp" android:lineSpacingExtra="2dp" />
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="?attr/pal_divider" android:layout_marginTop="12dp" android:layout_marginBottom="4dp" />
+        <Switch android:id="@+id/nightProtectionSwitch" android:layout_width="match_parent" android:layout_height="48dp" android:text="@string/night_protection" android:textColor="?attr/pal_text_primary" android:textSize="15sp" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/night_protection_summary" android:textColor="?attr/pal_text_secondary" android:textSize="12sp" android:lineSpacingExtra="2dp" />
+        <TextView android:id="@+id/nightProtectionState" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="?attr/pal_text_primary" android:textSize="12sp" android:paddingTop="4dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -34,6 +38,7 @@
             <Space android:layout_width="8dp" android:layout_height="1dp" />
             <Button android:id="@+id/diagBtn" android:layout_width="0dp" android:layout_height="48dp" android:layout_weight="1" android:text="@string/open_fcm_diag" android:textAllCaps="false" android:textColor="?attr/pal_text_primary" android:textSize="13sp" android:background="@drawable/secondary_button_bg" android:elevation="0dp" android:stateListAnimator="@null" />
         </LinearLayout>
+        <Button android:id="@+id/eventLogBtn" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="@string/event_log" android:textAllCaps="false" android:textColor="?attr/pal_text_primary" android:textSize="13sp" android:background="@drawable/secondary_button_bg" android:elevation="0dp" android:stateListAnimator="@null" />
         <Button android:id="@+id/permissionBtn" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="8dp" android:text="@string/grant_modify" android:textAllCaps="false" android:textColor="?attr/pal_blue" android:textStyle="bold" android:background="@drawable/secondary_button_bg" android:elevation="0dp" android:stateListAnimator="@null" />
     </LinearLayout>
 

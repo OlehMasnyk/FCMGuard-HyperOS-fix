@@ -76,4 +76,20 @@
     <string name="palette_sunset_amber">Sunset Amber</string>
     <string name="palette_graphite">Graphite</string>
     <string name="palette_aurora">Aurora</string>
+
+    <string name="status_value_granted_adb">Granted (ADB)</string>
+    <string name="alert_channel_name">Protection problems</string>
+    <string name="alert_channel_description">Alerts when HyperOS takes away something FCM Guard needs</string>
+    <string name="permission_lost_title">Modify system settings was turned off</string>
+    <string name="permission_lost_text">HyperOS turned off FCM Guard\'s permission, so Google Play services can drop off the whitelist again. Tap to turn it back on. To stop this for good, grant WRITE_SECURE_SETTINGS once over ADB (see README).</string>
+    <string name="night_protection">Night protection (HyperOS 4)</string>
+    <string name="night_protection_summary">Also keeps Google Play services on the HyperOS game-download freeze exemption list. HyperOS 4 ignores the no-restrict whitelist at night (23:00–08:00) but still honours this list. May use slightly more battery.</string>
+    <string name="night_protection_state_on">Google Play services is on the exemption list</string>
+    <string name="night_protection_state_missing">Google Play services is not on the exemption list yet</string>
+    <string name="event_log">Event log</string>
+    <string name="event_log_empty">No events recorded yet.</string>
+    <string name="event_log_copied">Event log copied</string>
+    <string name="copy">Copy</string>
+    <string name="clear">Clear</string>
+    <string name="close">Close</string>
 </resources>

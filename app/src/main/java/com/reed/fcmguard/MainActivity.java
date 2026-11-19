@@ -67,6 +67,8 @@ public class MainActivity extends Activity {
     private Button scanFcmAppsBtn;
     private Switch protectionSwitch;
     private Switch notificationSwitch;
+    private Switch nightProtectionSwitch;
+    private TextView nightProtectionState;
     private Button permissionBtn;
     private RadioGroup appearanceGroup;
     private StickyDashboardLayout dashboard;
@@ -217,6 +219,8 @@ public class MainActivity extends Activity {
         scanFcmAppsBtn = findViewById(R.id.scanFcmAppsBtn);
         protectionSwitch = findViewById(R.id.protectionSwitch);
         notificationSwitch = findViewById(R.id.notificationSwitch);
+        nightProtectionSwitch = findViewById(R.id.nightProtectionSwitch);
+        nightProtectionState = findViewById(R.id.nightProtectionState);
         permissionBtn = findViewById(R.id.permissionBtn);
         appearanceGroup = findViewById(R.id.appearanceGroup);
         dashboard = findViewById(R.id.root);
@@ -389,6 +393,7 @@ public class MainActivity extends Activity {
         suppressSwitchCallbacks = true;
         protectionSwitch.setChecked(SettingsGuard.isProtectionEnabled(this));
         notificationSwitch.setChecked(SettingsGuard.usePersistentNotification(this));
+        nightProtectionSwitch.setChecked(GameAllowlist.isEnabled(this));
         suppressSwitchCallbacks = false;
 
         protectionSwitch.setOnCheckedChangeListener((buttonView, checked) -> {
@@ -396,7 +401,7 @@ public class MainActivity extends Activity {
 
             if (checked) {
                 SettingsGuard.saveConfig(this, keyEdit.getText().toString(), itemEdit.getText().toString());
-                if (!Settings.System.canWrite(this)) {
+                if (!SettingsGuard.canWrite(this)) {
                     SettingsGuard.setProtectionEnabled(this, false);
                     suppressSwitchCallbacks = true;
                     protectionSwitch.setChecked(false);
@@ -435,6 +440,13 @@ public class MainActivity extends Activity {
             if (SettingsGuard.isProtectionEnabled(this)) startProtectionService();
             refreshStatus(null);
         });
+
+        nightProtectionSwitch.setOnCheckedChangeListener((buttonView, checked) -> {
+            if (suppressSwitchCallbacks) return;
+            GameAllowlist.setEnabled(this, checked);
+            if (checked && SettingsGuard.isProtectionEnabled(this)) GameAllowlist.ensure(this);
+            refreshStatus(null);
+        });
     }
 
     private void bindActions() {
@@ -452,6 +464,7 @@ public class MainActivity extends Activity {
             SettingsGuard.saveConfig(this, keyEdit.getText().toString(), itemEdit.getText().toString());
             SettingsGuard.Result result = SettingsGuard.repair(this);
             if (result.changed) FcmReconnect.kick(this);
+            GameAllowlist.ensure(this);
             refreshStatus(result.message);
         });
 
@@ -462,6 +475,7 @@ public class MainActivity extends Activity {
         });
 
         findViewById(R.id.diagBtn).setOnClickListener(v -> openFcmDiagnostics());
+        findViewById(R.id.eventLogBtn).setOnClickListener(v -> showEventLog());
         scanFcmAppsBtn.setOnClickListener(v -> toggleFcmAppsList());
         findViewById(R.id.openAutostartBtn).setOnClickListener(v -> {
             if (!HyperOsSettings.openAutoStartManager(this)) {
@@ -803,6 +817,36 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    private void showEventLog() {
+        String log = EventLog.read(this).trim();
+        TextView text = new TextView(this);
+        text.setText(log.isEmpty() ? getString(R.string.event_log_empty) : log);
+        text.setTextIsSelectable(true);
+        text.setTypeface(Typeface.MONOSPACE);
+        text.setTextSize(11f);
+        text.setTextColor(AppColors.get(this, R.attr.pal_text_primary));
+        int pad = dp(20);
+        text.setPadding(pad, pad / 2, pad, pad / 2);
+        android.widget.ScrollView scroll = new android.widget.ScrollView(this);
+        scroll.addView(text);
+        scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
+
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.event_log)
+                .setView(scroll)
+                .setPositiveButton(R.string.close, null)
+                .setNeutralButton(R.string.copy, (d, which) -> {
+                    android.content.ClipboardManager clipboard =
+                            (android.content.ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    if (clipboard != null) {
+                        clipboard.setPrimaryClip(android.content.ClipData.newPlainText("FCM Guard event log", log));
+                        toast(getString(R.string.event_log_copied));
+                    }
+                })
+                .setNegativeButton(R.string.clear, (d, which) -> EventLog.clear(this))
+                .show();
+    }
+
     private void openFcmDiagnostics() {
         String[] knownActivities = {
                 "com.google.android.gms.gcm.GcmDiagnostics",
@@ -844,7 +888,8 @@ public class MainActivity extends Activity {
     }
 
     private void refreshStatus(String firstLine) {
-        boolean canWrite = Settings.System.canWrite(this);
+        boolean canWrite = PermissionWatch.update(this);
+        boolean adbGrant = SettingsGuard.hasAdbGrant(this);
         boolean enabled = SettingsGuard.isProtectionEnabled(this);
         boolean notification = SettingsGuard.usePersistentNotification(this);
         String current = SettingsGuard.read(this);
@@ -853,7 +898,14 @@ public class MainActivity extends Activity {
         suppressSwitchCallbacks = true;
         protectionSwitch.setChecked(enabled);
         notificationSwitch.setChecked(notification);
+        boolean nightProtection = GameAllowlist.isEnabled(this);
+        nightProtectionSwitch.setChecked(nightProtection);
         suppressSwitchCallbacks = false;
+        nightProtectionState.setVisibility(nightProtection ? View.VISIBLE : View.GONE);
+        if (nightProtection) {
+            nightProtectionState.setText(GameAllowlist.contains(GameAllowlist.read(this))
+                    ? R.string.night_protection_state_on : R.string.night_protection_state_missing);
+        }
 
         // FCM Guard itself must not be frozen by HyperOS, or nothing repairs the whitelist
         // when GMS is removed: it should be on the no-restrict list (HyperOS keeps apps set
@@ -884,7 +936,8 @@ public class MainActivity extends Activity {
 
         java.util.List<StatusItem> items = new java.util.ArrayList<>();
         items.add(new StatusItem(R.string.status_label_permission,
-                canWrite ? R.string.status_value_granted : R.string.status_value_not_granted,
+                adbGrant ? R.string.status_value_granted_adb
+                        : canWrite ? R.string.status_value_granted : R.string.status_value_not_granted,
                 canWrite ? TONE_GOOD : TONE_BAD,
                 canWrite ? null : v -> openWriteSettings()));
         items.add(new StatusItem(R.string.status_label_protection,

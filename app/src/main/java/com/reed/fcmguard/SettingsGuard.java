@@ -1,7 +1,11 @@
 package com.reed.fcmguard;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Process;
 import android.provider.Settings;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -58,6 +62,25 @@ public final class SettingsGuard {
         return t.isEmpty() ? fallback : t;
     }
 
+    /**
+     * True when WRITE_SECURE_SETTINGS was granted once over ADB. SettingsProvider then skips
+     * the Modify-system-settings app-op check for Settings.System writes, so HyperOS turning
+     * that switch off no longer stops the repair.
+     */
+    public static boolean hasAdbGrant(Context context) {
+        return context.checkPermission(Manifest.permission.WRITE_SECURE_SETTINGS,
+                Process.myPid(), Process.myUid()) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean canWrite(Context context) {
+        return hasAdbGrant(context) || hasModifySettingsAppOp(context);
+    }
+
+    /** The user-facing Modify system settings switch (always on before Android 6). */
+    public static boolean hasModifySettingsAppOp(Context context) {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.System.canWrite(context);
+    }
+
     public static String read(Context context) {
         return Settings.System.getString(context.getContentResolver(), getConfiguredKey(context));
     }
@@ -84,10 +107,6 @@ public final class SettingsGuard {
      * important because the common background path should be practically idle.
      */
     public static synchronized Result repair(Context context) {
-        if (!Settings.System.canWrite(context)) {
-            return new Result(false, false, read(context), context.getString(R.string.permission_missing));
-        }
-
         String key = getConfiguredKey(context);
         String required = getConfiguredRequiredItem(context);
         String current = read(context);
@@ -111,16 +130,21 @@ public final class SettingsGuard {
         }
 
         String repaired = join(packages);
+        // Attempt the write even when canWrite() says no: the provider is the authority, and
+        // a refused write can be silently ignored, so success is only trusted after re-reading.
+        String missingPermission = canWrite(context) ? null : context.getString(R.string.permission_missing);
         try {
-            boolean ok = Settings.System.putString(context.getContentResolver(), key, repaired);
-            if (ok) {
+            Settings.System.putString(context.getContentResolver(), key, repaired);
+            if (hasRequiredItem(context, read(context))) {
                 saveLastGoodIfChanged(prefs, key, repaired);
                 return new Result(true, true, repaired, context.getString(R.string.repaired));
             }
-            return new Result(false, false, current, context.getString(R.string.write_rejected));
+            return new Result(false, false, current, missingPermission != null
+                    ? missingPermission : context.getString(R.string.write_rejected));
         } catch (Throwable t) {
-            return new Result(false, false, current,
-                    context.getString(R.string.write_failed, t.getClass().getSimpleName()));
+            return new Result(false, false, current, missingPermission != null
+                    ? missingPermission
+                    : context.getString(R.string.write_failed, t.getClass().getSimpleName()));
         }
     }
 
