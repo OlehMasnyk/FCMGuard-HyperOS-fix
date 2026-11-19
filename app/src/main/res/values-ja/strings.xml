@@ -71,4 +71,20 @@
     <string name="palette_sunset_amber">アンバー</string>
     <string name="palette_graphite">グラファイト</string>
     <string name="palette_aurora">オーロラ</string>
+
+    <string name="status_value_granted_adb">許可済み（ADB）</string>
+    <string name="alert_channel_name">保護の問題</string>
+    <string name="alert_channel_description">FCM Guard に必要な権限を HyperOS が取り消したときに通知</string>
+    <string name="permission_lost_title">「システム設定の変更」がオフにされました</string>
+    <string name="permission_lost_text">HyperOS が FCM Guard の権限をオフにしたため、Google Play 開発者サービスが再びホワイトリストから外れる可能性があります。タップして再度オンにしてください。根本的に防ぐには、ADB で WRITE_SECURE_SETTINGS を一度付与してください（README 参照）。</string>
+    <string name="night_protection">夜間保護（HyperOS 4）</string>
+    <string name="night_protection_summary">Google Play 開発者サービスを HyperOS のゲーム事前ダウンロード用フリーズ除外リストにも追加します。HyperOS 4 は夜間（23:00–08:00）に無制限ホワイトリストを無視しますが、このリストは守ります。電池消費がわずかに増える場合があります。</string>
+    <string name="night_protection_state_on">Google Play 開発者サービスは除外リストに入っています</string>
+    <string name="night_protection_state_missing">Google Play 開発者サービスはまだ除外リストに入っていません</string>
+    <string name="event_log">イベントログ</string>
+    <string name="event_log_empty">記録されたイベントはありません。</string>
+    <string name="event_log_copied">イベントログをコピーしました</string>
+    <string name="copy">コピー</string>
+    <string name="clear">消去</string>
+    <string name="close">閉じる</string>
 </resources>

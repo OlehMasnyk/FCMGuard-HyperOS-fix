@@ -50,7 +50,10 @@ Also new in 2.0:
 
 - **No root or Shizuku** — uses the user-grantable **Modify system settings** permission instead of root, persistent ADB, Accessibility, VPN, overlay, or device-admin privileges.
 - **Finance-app friendly** — keeps the implementation deliberately low-privilege for better compatibility with security-sensitive apps.
-- **Low background power** — exact event-driven monitoring is the main path; the 30-minute fallback is in-process and does not deliberately wake a sleeping phone.
+- **Low background power** — exact event-driven monitoring is the main path; the 30-minute fallback is a non-wakeup alarm that never wakes a sleeping phone.
+- **Survives HyperOS revoking its permission** — alerts you the moment **Modify system settings** is switched off, and can be made immune to it with a one-time ADB grant (see [If HyperOS turns off Modify system settings](#if-hyperos-turns-off-modify-system-settings)).
+- **Night protection (HyperOS 4)** — also keeps Google Play services on the game-download freeze exemption list, which HyperOS 4 still honours at night.
+- **Event log** — permission changes, repairs and how the previous process ended, to explain an overnight failure.
 - **Reconnects only when needed** — FCM/MCS reconnect broadcasts are sent only after a real whitelist repair or a manual request.
 - **Optional persistent notification** — foreground mode uses a visible-but-silent notification channel for stronger process survival; quiet background mode remains available.
 - **FCM app assistant** — scans likely Firebase/GCM clients and, when HyperOS exposes the vendor AppOps state, shows read-only Autostart status with automatic re-check after returning from system settings.
@@ -71,6 +74,20 @@ Also new in 2.0:
 8. Optional: scan **FCM apps**. If HyperOS exposes readable Autostart state, the list marks apps as Enabled / Partial / Disabled / Unknown and refreshes after you return from **Configure all in HyperOS**. If the ROM blocks the query, FCM Guard shows a clear Unknown/unavailable fallback instead of guessing.
 9. Optional: tap **Open FCM diagnostics** to open Google Play services diagnostics and inspect the `mtalk.google.com:5228` connection.
 10. If one app still receives notifications late while other FCM apps are normal, configure that app separately. For apps such as **WhatsApp**, set **Battery saver / Battery optimization → No restrictions** in HyperOS; enabling **Autostart** is also recommended when available.
+
+## If HyperOS turns off Modify system settings
+
+On some HyperOS 4 China builds the **Modify system settings** switch for FCM Guard has been found turned off in the morning, with no user action. Without it FCM Guard cannot put Google Play services back on the whitelist, so pushes stop.
+
+FCM Guard now notices this right away (it watches the permission and re-checks on unlock, screen-on, network changes, charger connection and boot), shows a notification that opens the grant screen, and records the change in **Event log**.
+
+To make the repair independent of that switch, grant one extra permission once from a computer (USB debugging; on HyperOS also enable **USB debugging (Security settings)**):
+
+```bash
+adb shell pm grant com.reed.fcmguard android.permission.WRITE_SECURE_SETTINGS
+```
+
+With it, Android lets FCM Guard write the whitelist even while **Modify system settings** is off; the status card then shows **Granted (ADB)**. The grant survives reboots and updates (not uninstall), and USB debugging can be switched off again afterwards. FCM Guard uses it only for the same `Settings.System` writes as before.
 
 > FCM Guard is mainly for China-ROM HyperOS 3 and HyperOS 4 devices where Google services work normally but PowerKeeper / Greezer can still interrupt the background FCM connection.
 
@@ -112,8 +129,9 @@ FCM Guard intentionally uses `compileSdk 35` with `targetSdk 22`. The modern com
 
 - Exact `ContentObserver` only for `MILLET_NO_RESTRICT_APP`.
 - ~400 ms debounce after an observed change.
-- 30-minute in-process fallback instead of rapid polling.
-- No `AlarmManager`, repeating exact alarm, or WakeLock for the fallback.
+- 30-minute fallback check through a single non-wakeup alarm instead of rapid polling. It never wakes a sleeping phone; it runs at the next wake-up and restarts the service if HyperOS killed the process.
+- No exact alarm, wakeup alarm, or WakeLock.
+- Extra checks on unlock, screen-on, network change, charger connection and boot, plus an immediate callback when the **Modify system settings** app-op changes.
 - No write when GMS is already present.
 - No reconnect broadcast unless a repair actually happened or the user requests one.
 
@@ -175,7 +193,7 @@ Also enable **Autostart** for the affected app when the ROM exposes that option.
 
 ## Permissions and privacy
 
-FCM Guard uses `WRITE_SETTINGS`, `RECEIVE_BOOT_COMPLETED`, foreground-service/notification support, and narrow package visibility for FCM/GCM handlers, Google Play services, and Xiaomi Security Center.
+FCM Guard uses `WRITE_SETTINGS`, `RECEIVE_BOOT_COMPLETED`, foreground-service/notification support, the optional ADB-granted `WRITE_SECURE_SETTINGS` (see above), and narrow package visibility for FCM/GCM handlers, Google Play services, and Xiaomi Security Center.
 
 It does **not** require root, Shizuku, persistent ADB, Accessibility, VPN, overlay, device-admin, account access, or traffic inspection.
 

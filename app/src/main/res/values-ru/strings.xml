@@ -76,4 +76,20 @@
     <string name="palette_sunset_amber">Янтарь</string>
     <string name="palette_graphite">Графит</string>
     <string name="palette_aurora">Аврора</string>
+
+    <string name="status_value_granted_adb">Выдано (ADB)</string>
+    <string name="alert_channel_name">Проблемы защиты</string>
+    <string name="alert_channel_description">Предупреждает, когда HyperOS отбирает у FCM Guard нужное разрешение</string>
+    <string name="permission_lost_title">«Изменение системных настроек» отключено</string>
+    <string name="permission_lost_text">HyperOS отключила разрешение FCM Guard, поэтому сервисы Google Play снова могут выпасть из белого списка. Нажмите, чтобы включить его снова. Чтобы это больше не повторялось, один раз выдайте WRITE_SECURE_SETTINGS через ADB (см. README).</string>
+    <string name="night_protection">Ночная защита (HyperOS 4)</string>
+    <string name="night_protection_summary">Также добавляет сервисы Google Play в список исключений из заморозки для предзагрузки игр HyperOS. Ночью (23:00–08:00) HyperOS 4 игнорирует белый список «Без ограничений», но соблюдает этот список. Расход батареи может немного вырасти.</string>
+    <string name="night_protection_state_on">Сервисы Google Play в списке исключений</string>
+    <string name="night_protection_state_missing">Сервисов Google Play пока нет в списке исключений</string>
+    <string name="event_log">Журнал событий</string>
+    <string name="event_log_empty">Событий пока нет.</string>
+    <string name="event_log_copied">Журнал скопирован</string>
+    <string name="copy">Копировать</string>
+    <string name="clear">Очистить</string>
+    <string name="close">Закрыть</string>
 </resources>

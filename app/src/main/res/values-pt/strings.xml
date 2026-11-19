@@ -76,4 +76,20 @@
     <string name="palette_sunset_amber">Âmbar</string>
     <string name="palette_graphite">Grafite</string>
     <string name="palette_aurora">Aurora</string>
+
+    <string name="status_value_granted_adb">Concedida (ADB)</string>
+    <string name="alert_channel_name">Problemas de proteção</string>
+    <string name="alert_channel_description">Avisa quando o HyperOS retira algo de que o FCM Guard precisa</string>
+    <string name="permission_lost_title">\"Modificar configurações do sistema\" foi desativado</string>
+    <string name="permission_lost_text">O HyperOS desativou a permissão do FCM Guard, então os serviços do Google Play podem sair da lista de permissões de novo. Toque para reativá-la. Para evitar isso de vez, conceda WRITE_SECURE_SETTINGS uma vez pelo ADB (veja o README).</string>
+    <string name="night_protection">Proteção noturna (HyperOS 4)</string>
+    <string name="night_protection_summary">Também coloca os serviços do Google Play na lista de isenção de congelamento de pré-download de jogos do HyperOS. À noite (23:00–08:00), o HyperOS 4 ignora a lista sem restrições, mas respeita esta. Pode gastar um pouco mais de bateria.</string>
+    <string name="night_protection_state_on">Os serviços do Google Play estão na lista de isenção</string>
+    <string name="night_protection_state_missing">Os serviços do Google Play ainda não estão na lista de isenção</string>
+    <string name="event_log">Registro de eventos</string>
+    <string name="event_log_empty">Nenhum evento registrado ainda.</string>
+    <string name="event_log_copied">Registro copiado</string>
+    <string name="copy">Copiar</string>
+    <string name="clear">Limpar</string>
+    <string name="close">Fechar</string>
 </resources>
